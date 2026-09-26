@@ -180,7 +180,7 @@ function render() {
     card.dataset.instanceId = video.instanceId;
     card.draggable = true;
 
-    // Drag & Drop
+    // Drag & Drop Handlers
     card.addEventListener("dragstart", (e) => {
       draggedIndex = index;
       card.classList.add("is-dragging");
@@ -276,7 +276,7 @@ function render() {
   });
 }
 
-// Keyboard Shortcuts
+// Global Keyboard Shortcuts
 document.addEventListener("keydown", (e) => {
   if (["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) return;
 
@@ -391,6 +391,33 @@ clearAll.addEventListener("click", () => {
   setMessage("");
   input.focus();
 });
+
+// Community Support Modal Events
+const coffeeBtn = document.getElementById("coffee-btn");
+const coffeeModal = document.getElementById("coffee-modal");
+const closeModalBtn = document.getElementById("close-modal");
+
+if (coffeeBtn && coffeeModal) {
+  coffeeBtn.addEventListener("click", () => {
+    coffeeModal.hidden = false;
+  });
+
+  closeModalBtn?.addEventListener("click", () => {
+    coffeeModal.hidden = true;
+  });
+
+  coffeeModal.addEventListener("click", (e) => {
+    if (e.target === coffeeModal) {
+      coffeeModal.hidden = true;
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !coffeeModal.hidden) {
+      coffeeModal.hidden = true;
+    }
+  });
+}
 
 // Initialization
 loadState();

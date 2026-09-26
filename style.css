@@ -571,7 +571,212 @@ kbd {
   text-transform: uppercase;
 }
 
-/* Consolidated Footer */
+/* Topbar Support Button */
+.support-pill-btn {
+  background: rgba(139, 124, 255, 0.12);
+  color: var(--accent-2);
+  border: 1px solid rgba(139, 124, 255, 0.35);
+  font-weight: 700;
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 50px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 8px;
+  transition: all 0.2s ease;
+}
+
+.support-pill-btn:hover {
+  background: var(--accent);
+  color: #08090e;
+  border-color: transparent;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(139, 124, 255, 0.35);
+}
+
+/* Support Modal Overlay & Card */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 5, 8, 0.85);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.modal-overlay[hidden] { display: none; }
+
+.modal-card {
+  position: relative;
+  width: min(450px, 100%);
+  background: #10131c;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 32px 28px;
+  text-align: center;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+  animation: modalPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPop {
+  from { transform: scale(0.94); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--muted);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: all 0.2s ease;
+}
+
+.modal-close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.modal-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(139, 124, 255, 0.15);
+  color: var(--accent-2);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  margin-bottom: 12px;
+}
+
+.modal-card h2 {
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0 0 8px 0;
+  color: #fff;
+}
+
+.modal-desc {
+  color: #8d93a5;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0 0 24px 0;
+}
+
+/* Goal Bar */
+.goal-container {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.goal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.goal-amount strong {
+  color: var(--accent-2);
+  font-size: 13px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #5bcbff);
+  border-radius: 10px;
+  transition: width 0.4s ease;
+}
+
+/* Call to Action Button */
+.support-primary-btn {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  background: linear-gradient(100deg, var(--accent), #7a69ff);
+  color: #08090e;
+  font-weight: 800;
+  font-size: 14px;
+  text-decoration: none;
+  box-shadow: 0 6px 20px rgba(139, 124, 255, 0.35);
+  transition: all 0.2s ease;
+  margin-bottom: 24px;
+}
+
+.support-primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(139, 124, 255, 0.5);
+  background: linear-gradient(100deg, #998cff, #8878ff);
+}
+
+/* Supporters Wall Section */
+.supporters-box {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 18px;
+}
+
+.supporters-label {
+  display: block;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #555b6c;
+  margin-bottom: 10px;
+}
+
+.supporters-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+}
+
+.supporter-badge {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #d1d5e4;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.modal-thanks {
+  font-size: 11px;
+  color: #555b6c;
+  margin: 0;
+}
+
+/* Footer Layout & Links */
 footer {
   width: min(1400px, calc(100% - 36px));
   margin: 40px auto 0 auto;
@@ -625,7 +830,7 @@ footer {
 
 @media (max-width: 580px) {
   .topbar { padding: 0 16px; }
-  .top-actions { display: none; }
+  .top-actions { gap: 4px; }
   .app-shell { width: calc(100% - 24px); padding-top: 25px; }
   .url-form { grid-template-columns: 1fr; }
   .toolbar { align-items: flex-start; flex-direction: column; }
@@ -639,4 +844,5 @@ footer {
   }
 
   footer { width: calc(100% - 24px); }
+  .support-pill-btn { font-size: 11px; padding: 5px 10px; }
 }
