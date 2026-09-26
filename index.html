@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Lumzo - Watch and monitor multiple YouTube videos and live streams on one customizable screen.">
+  <title>Lumzo — One screen. More to see.</title>
+
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Lumzo — Multi-YouTube Viewer Dashboard">
+  <meta property="og:description" content="Watch and monitor multiple YouTube videos and live streams simultaneously in a clean, high-performance dashboard.">
+  <meta property="og:image" content="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lumzo — Multi-YouTube Viewer Dashboard">
+  <meta name="twitter:description" content="Watch and monitor multiple YouTube videos and live streams simultaneously in a clean, high-performance dashboard.">
+  <meta name="twitter:image" content="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Lumzo home">
+      <span class="brand-mark">L</span>
+      <span>Lumzo</span>
+    </a>
+    <div class="top-actions">
+      <span class="status-dot"></span>
+      <span>Local session</span>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <section class="hero">
+      <p class="eyebrow">MULTI-VIDEO VIEWER</p>
+      <h1>All your videos.<br><span>Together.</span></h1>
+      <p class="hero-copy">Bring your YouTube videos, Shorts, and live streams together in a clean, flexible dashboard.</p>
+    </section>
+
+    <section class="control-panel" aria-label="Video controls">
+      <form id="add-form" class="url-form" novalidate>
+        <div class="input-wrapper">
+          <label class="sr-only" for="youtube-url">YouTube URL</label>
+          <input id="youtube-url" type="text" inputmode="url" autocomplete="off"
+            placeholder="Paste a YouTube video, Shorts, or live URL…" required>
+          <button id="clear-input" class="input-clear-btn" type="button" aria-label="Clear input text" hidden>×</button>
+        </div>
+        <button type="submit" class="primary-btn">
+          <span>+</span> Add video
+        </button>
+      </form>
+      <p id="message" class="message" role="status" aria-live="polite"></p>
+      <div class="wall-meta">
+        <span id="count-label">0 / 30 players</span>
+        <span>•</span>
+        <span>Drag cards to reorder</span>
+        <span>•</span>
+        <span class="shortcut-hints">
+          Shortcuts: <kbd>Space</kbd> Play/Pause • <kbd>M</kbd> Mute • <kbd>F</kbd> Search
+        </span>
+      </div>
+
+      <div class="toolbar">
+        <div class="layout-control">
+          <span class="toolbar-label">View</span>
+          <div class="layout-buttons" role="group" aria-label="Grid layout">
+            <button class="layout-btn active" data-cols="1" type="button" title="Solo view (1 column)">Solo</button>
+            <button class="layout-btn" data-cols="2" type="button" title="Duo view (2 columns)">Duo</button>
+            <button class="layout-btn" data-cols="3" type="button" title="Grid view (3 columns)">Grid</button>
+            <button class="layout-btn" data-cols="4" type="button" title="Wall view (4 columns)">Wall</button>
+            <button class="layout-btn" data-cols="5" type="button" title="Mega view (5 columns)">Mega</button>
+          </div>
+        </div>
+
+        <div class="action-controls">
+          <div class="global-controls" role="group" aria-label="Global playback controls">
+            <button id="play-all" class="ghost-btn" type="button" title="Play all (Space)">▶ Play all</button>
+            <button id="pause-all" class="ghost-btn" type="button" title="Pause all (Space)">⏸ Pause all</button>
+            <button id="mute-all" class="ghost-btn" type="button" title="Mute all (M)">🔇 Mute all</button>
+            <button id="unmute-all" class="ghost-btn" type="button" title="Unmute all (M)">🔊 Unmute all</button>
+          </div>
+          <button id="share-wall" class="ghost-btn" type="button" title="Copy shareable link">🔗 Share wall</button>
+          <button id="clear-all" class="ghost-btn danger" type="button">Clear all</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Leaderboard Ad Slot -->
+    <div class="ad-slot ad-leaderboard" aria-label="Advertisement">
+      <span class="ad-label">ADVERTISEMENT</span>
+    </div>
+
+    <section id="empty-state" class="empty-state">
+      <div class="empty-icon">＋</div>
+      <h2>Your wall is ready.</h2>
+      <p>Paste a YouTube or Shorts link above to get started.</p>
+    </section>
+
+    <section id="video-grid" class="video-grid cols-1" aria-label="YouTube players"></section>
+
+    <!-- Banner Ad Slot -->
+    <div class="ad-slot ad-banner" aria-label="Advertisement">
+      <span class="ad-label">ADVERTISEMENT</span>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-left">
+      <span>© 2026 Lumzo</span>
+      <span>•</span>
+      <span>Multiple streams. Zero clutter.</span>
+    </div>
+    <div class="footer-right">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
