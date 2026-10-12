@@ -164,6 +164,124 @@ function mountIframe(card, video, autoPlay = true) {
   video.isLoaded = true;
 }
 
+// Helper to create a single card DOM element without destroying existing cards
+function createCardElement(video, index) {
+  const card = document.createElement("article");
+  card.className = `video-card ${video.isShort ? "is-short" : ""}`;
+  card.dataset.instanceId = video.instanceId;
+  card.draggable = true;
+
+  // Drag & Drop Handlers
+  card.addEventListener("dragstart", (e) => {
+    draggedIndex = videos.findIndex(v => v.instanceId === video.instanceId);
+    card.classList.add("is-dragging");
+    e.dataTransfer.effectAllowed = "move";
+  });
+
+  card.addEventListener("dragend", () => {
+    card.classList.remove("is-dragging");
+    grid.querySelectorAll(".video-card").forEach(c => c.classList.remove("drag-over"));
+  });
+
+  card.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    card.classList.add("drag-over");
+  });
+
+  card.addEventListener("dragleave", () => card.classList.remove("drag-over"));
+
+  card.addEventListener("drop", (e) => {
+    e.preventDefault();
+    card.classList.remove("drag-over");
+    const dropIndex = videos.findIndex(v => v.instanceId === video.instanceId);
+    if (draggedIndex !== null && draggedIndex !== dropIndex) {
+      const movedItem = videos.splice(draggedIndex, 1)[0];
+      videos.splice(dropIndex, 0, movedItem);
+      saveState();
+      render();
+    }
+  });
+
+  const header = document.createElement("div");
+  header.className = "card-header";
+
+  const label = document.createElement("span");
+  label.className = `card-label ${video.isShort ? "short-label" : ""}`;
+  label.textContent = video.isShort ? `⚡ SHORT ${String(index + 1).padStart(2, "0")}` : `VIDEO ${String(index + 1).padStart(2, "0")}`;
+
+  const actions = document.createElement("div");
+  actions.className = "card-actions";
+
+  const fullscreen = document.createElement("button");
+  fullscreen.className = "card-btn";
+  fullscreen.type = "button";
+  fullscreen.title = "Fullscreen";
+  fullscreen.ariaLabel = "Fullscreen";
+  fullscreen.textContent = "⛶";
+  fullscreen.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const activeIframe = card.querySelector("iframe");
+    (activeIframe || card).requestFullscreen?.();
+  });
+
+  const remove = document.createElement("button");
+  remove.className = "card-btn";
+  remove.type = "button";
+  remove.title = "Remove";
+  remove.ariaLabel = "Remove video";
+  remove.textContent = "×";
+  remove.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    card.style.display = "none";
+    videos = videos.filter(v => v.instanceId !== video.instanceId);
+    setTimeout(() => card.remove(), 50);
+
+    saveState();
+    if (countLabel) {
+      countLabel.textContent = `${videos.length} / ${MAX_PLAYERS} players`;
+    }
+    emptyState.style.display = videos.length ? "none" : "grid";
+    setMessage(videos.length ? `${videos.length} video${videos.length === 1 ? "" : "s"} on the wall.` : "");
+  });
+
+  actions.append(fullscreen, remove);
+  header.append(label, actions);
+
+  const footer = document.createElement("div");
+  footer.className = "card-footer";
+  footer.textContent = video.isShort ? "YouTube Shorts" : "YouTube";
+
+  card.append(header, footer);
+
+  if (video.isLoaded) {
+    mountIframe(card, video, false);
+  } else {
+    const facade = document.createElement("button");
+    facade.className = "card-facade";
+    facade.type = "button";
+    facade.ariaLabel = "Play video";
+    facade.style.backgroundImage = `url('https://img.youtube.com/vi/${video.id}/hqdefault.jpg')`;
+
+    const playBadge = document.createElement("span");
+    playBadge.className = "play-badge";
+    playBadge.textContent = "▶";
+
+    facade.appendChild(playBadge);
+    facade.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      mountIframe(card, video, true);
+    });
+    card.appendChild(facade);
+  }
+
+  return card;
+}
+
 function render() {
   updateLayoutClass();
   grid.replaceChildren();
@@ -175,124 +293,7 @@ function render() {
   emptyState.style.display = videos.length ? "none" : "grid";
 
   videos.forEach((video, index) => {
-    const card = document.createElement("article");
-    card.className = `video-card ${video.isShort ? "is-short" : ""}`;
-    card.dataset.instanceId = video.instanceId;
-    card.draggable = true;
-
-    // Drag & Drop Handlers
-    card.addEventListener("dragstart", (e) => {
-      draggedIndex = index;
-      card.classList.add("is-dragging");
-      e.dataTransfer.effectAllowed = "move";
-    });
-
-    card.addEventListener("dragend", () => {
-      card.classList.remove("is-dragging");
-      grid.querySelectorAll(".video-card").forEach(c => c.classList.remove("drag-over"));
-    });
-
-    card.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = "move";
-      card.classList.add("drag-over");
-    });
-
-    card.addEventListener("dragleave", () => card.classList.remove("drag-over"));
-
-    card.addEventListener("drop", (e) => {
-      e.preventDefault();
-      card.classList.remove("drag-over");
-      if (draggedIndex !== null && draggedIndex !== index) {
-        const movedItem = videos.splice(draggedIndex, 1)[0];
-        videos.splice(index, 0, movedItem);
-        saveState();
-        render();
-      }
-    });
-
-    const header = document.createElement("div");
-    header.className = "card-header";
-
-    const label = document.createElement("span");
-    label.className = `card-label ${video.isShort ? "short-label" : ""}`;
-    label.textContent = video.isShort ? `⚡ SHORT ${String(index + 1).padStart(2, "0")}` : `VIDEO ${String(index + 1).padStart(2, "0")}`;
-
-    const actions = document.createElement("div");
-    actions.className = "card-actions";
-
-    const fullscreen = document.createElement("button");
-    fullscreen.className = "card-btn";
-    fullscreen.type = "button";
-    fullscreen.title = "Fullscreen";
-    fullscreen.ariaLabel = "Fullscreen";
-    fullscreen.textContent = "⛶";
-    fullscreen.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const activeIframe = card.querySelector("iframe");
-      (activeIframe || card).requestFullscreen?.();
-    });
-
-    const remove = document.createElement("button");
-    remove.className = "card-btn";
-    remove.type = "button";
-    remove.title = "Remove";
-    remove.ariaLabel = "Remove video";
-    remove.textContent = "×";
-    remove.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      // 1. Hide card immediately to prevent DOM layout shift
-      card.style.display = "none";
-
-      // 2. Remove item from the internal array
-      videos = videos.filter(v => v.instanceId !== video.instanceId);
-      
-      // 3. Remove node from DOM silently
-      setTimeout(() => card.remove(), 50);
-
-      // 4. Update storage and labels without re-rendering active players
-      saveState();
-      if (countLabel) {
-        countLabel.textContent = `${videos.length} / ${MAX_PLAYERS} players`;
-      }
-      emptyState.style.display = videos.length ? "none" : "grid";
-      setMessage(videos.length ? `${videos.length} video${videos.length === 1 ? "" : "s"} on the wall.` : "");
-    });
-
-    actions.append(fullscreen, remove);
-    header.append(label, actions);
-
-    const footer = document.createElement("div");
-    footer.className = "card-footer";
-    footer.textContent = video.isShort ? "YouTube Shorts" : "YouTube";
-
-    card.append(header, footer);
-
-    if (video.isLoaded) {
-      mountIframe(card, video, false);
-    } else {
-      const facade = document.createElement("button");
-      facade.className = "card-facade";
-      facade.type = "button";
-      facade.ariaLabel = "Play video";
-      facade.style.backgroundImage = `url('https://img.youtube.com/vi/${video.id}/hqdefault.jpg')`;
-
-      const playBadge = document.createElement("span");
-      playBadge.className = "play-badge";
-      playBadge.textContent = "▶";
-
-      facade.appendChild(playBadge);
-      facade.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        mountIframe(card, video, true);
-      });
-      card.appendChild(facade);
-    }
-
+    const card = createCardElement(video, index);
     grid.appendChild(card);
   });
 }
@@ -337,6 +338,7 @@ clearInputBtn.addEventListener("click", () => {
   input.focus();
 });
 
+// ADD FORM SUBMIT (Appends single card to prevent reload)
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   const result = extractYouTubeId(input.value);
@@ -353,11 +355,25 @@ form.addEventListener("submit", (e) => {
   }
 
   const instanceId = `player-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
-  videos.push({ id: result.id, isShort: result.isShort, instanceId, isLoaded: false });
+  const newVideo = { id: result.id, isShort: result.isShort, instanceId, isLoaded: false };
+  videos.push(newVideo);
 
   saveState();
-  render();
+
+  // Hide empty state if first video
+  emptyState.style.display = "none";
+
+  // Append ONLY the new card (keeps active playing iframes untouched)
+  const newCard = createCardElement(newVideo, videos.length - 1);
+  grid.appendChild(newCard);
+
+  // Clear input
+  input.value = "";
   updateClearInputVisibility();
+
+  if (countLabel) {
+    countLabel.textContent = `${videos.length} / ${MAX_PLAYERS} players`;
+  }
   setMessage(`${videos.length} video${videos.length === 1 ? "" : "s"} on the wall.`);
 });
 
