@@ -347,6 +347,7 @@ kbd {
   gap: 14px;
   width: 100%;
   align-items: start;
+  contain: layout; /* Prevents grid reflow from interrupting running active iframes */
 }
 
 .video-grid.cols-1 { grid-template-columns: 1fr; max-width: 920px; margin: 0 auto; }
@@ -365,6 +366,7 @@ kbd {
   overflow: hidden;
   position: relative;
   cursor: grab;
+  contain: layout paint; /* Completely isolates card rendering state */
   transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
 }
 
