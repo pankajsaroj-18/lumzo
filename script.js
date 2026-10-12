@@ -239,9 +239,18 @@ function render() {
     remove.ariaLabel = "Remove video";
     remove.textContent = "×";
     remove.addEventListener("click", () => {
+      // 1. Remove item from the internal array
       videos = videos.filter(v => v.instanceId !== video.instanceId);
+      
+      // 2. Remove ONLY this card element from DOM (preserves playing iframes)
+      card.remove();
+      
+      // 3. Update storage, count label, and empty state without re-rendering everything
       saveState();
-      render();
+      if (countLabel) {
+        countLabel.textContent = `${videos.length} / ${MAX_PLAYERS} players`;
+      }
+      emptyState.style.display = videos.length ? "none" : "grid";
       setMessage(videos.length ? `${videos.length} video${videos.length === 1 ? "" : "s"} on the wall.` : "");
     });
 
