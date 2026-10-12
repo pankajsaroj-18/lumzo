@@ -164,7 +164,6 @@ function mountIframe(card, video, autoPlay = true) {
   video.isLoaded = true;
 }
 
-// Helper to create a single card DOM element without destroying existing cards
 function createCardElement(video, index) {
   const card = document.createElement("article");
   card.className = `video-card ${video.isShort ? "is-short" : ""}`;
@@ -338,7 +337,6 @@ clearInputBtn.addEventListener("click", () => {
   input.focus();
 });
 
-// ADD FORM SUBMIT (Appends single card to prevent reload)
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   const result = extractYouTubeId(input.value);
@@ -360,14 +358,14 @@ form.addEventListener("submit", (e) => {
 
   saveState();
 
-  // Hide empty state if first video
-  emptyState.style.display = "none";
+  if (emptyState) emptyState.style.display = "none";
 
-  // Append ONLY the new card (keeps active playing iframes untouched)
   const newCard = createCardElement(newVideo, videos.length - 1);
-  grid.appendChild(newCard);
+  
+  window.requestAnimationFrame(() => {
+    grid.appendChild(newCard);
+  });
 
-  // Clear input
   input.value = "";
   updateClearInputVisibility();
 
