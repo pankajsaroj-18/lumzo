@@ -227,7 +227,9 @@ function render() {
     fullscreen.title = "Fullscreen";
     fullscreen.ariaLabel = "Fullscreen";
     fullscreen.textContent = "⛶";
-    fullscreen.addEventListener("click", () => {
+    fullscreen.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       const activeIframe = card.querySelector("iframe");
       (activeIframe || card).requestFullscreen?.();
     });
@@ -238,14 +240,20 @@ function render() {
     remove.title = "Remove";
     remove.ariaLabel = "Remove video";
     remove.textContent = "×";
-    remove.addEventListener("click", () => {
-      // 1. Remove item from the internal array
+    remove.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      // 1. Hide card immediately to prevent DOM layout shift
+      card.style.display = "none";
+
+      // 2. Remove item from the internal array
       videos = videos.filter(v => v.instanceId !== video.instanceId);
       
-      // 2. Remove ONLY this card element from DOM (preserves playing iframes)
-      card.remove();
-      
-      // 3. Update storage, count label, and empty state without re-rendering everything
+      // 3. Remove node from DOM silently
+      setTimeout(() => card.remove(), 50);
+
+      // 4. Update storage and labels without re-rendering active players
       saveState();
       if (countLabel) {
         countLabel.textContent = `${videos.length} / ${MAX_PLAYERS} players`;
@@ -277,7 +285,11 @@ function render() {
       playBadge.textContent = "▶";
 
       facade.appendChild(playBadge);
-      facade.addEventListener("click", () => mountIframe(card, video, true));
+      facade.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        mountIframe(card, video, true);
+      });
       card.appendChild(facade);
     }
 
